@@ -2,12 +2,16 @@
 import Link from "next/link";
 import { Contactos } from "../types/contacto"
 import { eliminarContacto } from "../api";
+import { useRouter } from 'next/navigation';
 
 interface ListaProps {
     contactos: Contactos[]
 }
 
 const Lista: React.FC<ListaProps> = ({contactos}) => {
+
+    const router = useRouter();
+
     return(
         <div className="border-black rounded p-8">
 
@@ -30,7 +34,10 @@ const Lista: React.FC<ListaProps> = ({contactos}) => {
                                 <td>
                                     <button 
                                         className="bg-red-200 hover:bg-red-400 px-2 w-20 mx-2 rounded"
-                                        onClick={() => eliminarContacto(contacto.contact_name, contacto.contact_id)}
+                                        onClick={() => {
+                                            eliminarContacto(contacto.contact_name, contacto.contact_id);
+                                            router.refresh();
+                                        }}
                                     >
                                             Eliminar
                                     </button>

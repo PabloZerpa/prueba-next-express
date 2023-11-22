@@ -1,6 +1,6 @@
 
 'use client';
-import { FormEventHandler, useState } from 'react';
+import { FormEventHandler, useState, useEffect } from 'react';
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import { editarContacto, obtenerPorId } from '@/app/api';
@@ -13,11 +13,20 @@ export default function EditarContacto({ params }: { params: { id: number }}) {
   const [phone, setPhone] = useState<string>('');
   const [email, setEmail] = useState<string>('');
 
+  useEffect(() => {
+    obtenerPorId(params.id)
+      .then((res) => {
+        setName(res.contact_name);
+        setPhone(res.contact_phone);
+        setEmail(res.contact_email);
+      });
+  }, [])
+
   const editar: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
     const newContacto: Contactos = {
-      contact_id: 0,
+      contact_id: params.id,
       name: name,
       phone: phone,
       email: email,
@@ -25,8 +34,9 @@ export default function EditarContacto({ params }: { params: { id: number }}) {
     
     editarContacto(newContacto);
 
-    router.push('/dashboard');
-
+    router.replace('/dashboard');
+    router.refresh();
+    
     };
     return (
       <form className="flex flex-col justify-center items-center gap-4 border-2 border-black p-12 rounded-lg"  onSubmit={editar}>
@@ -37,6 +47,7 @@ export default function EditarContacto({ params }: { params: { id: number }}) {
         <div className='flex flex-col items-start'>
           <label>Nombre</label>
           <input 
+            defaultValue={name}
             className='outline-none p-2 text-black border-2 border-black w-72 rounded'
             type="text" 
             name="nombre" 
@@ -47,6 +58,7 @@ export default function EditarContacto({ params }: { params: { id: number }}) {
         <div className='flex flex-col items-start'>
           <label>Telefono</label>
           <input 
+            defaultValue={phone}
             className='outline-none p-2 text-black border-2 border-black w-72 rounded'
             type="text" 
             name="telefono"
@@ -57,6 +69,7 @@ export default function EditarContacto({ params }: { params: { id: number }}) {
         <div className='flex flex-col items-start'>
           <label>Correo</label>
           <input 
+           defaultValue={email}
             className='outline-none p-2 text-black border-2 border-black w-72 rounded'
             type="email" 
             name="correo" 

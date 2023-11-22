@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 
 export default function AgregarContacto() {
 
-  const router = useRouter();
+  const router = useRouter()
   const [name, setName] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -29,7 +29,8 @@ export default function AgregarContacto() {
     setName('');
     setPhone('');
     setEmail('');
-    router.push('/dashboard');
+    router.replace('/dashboard');
+    router.refresh();
 
   };
 
